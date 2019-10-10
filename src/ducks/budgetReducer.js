@@ -8,8 +8,8 @@ const initialState = {
 
 
 const REQUEST_BUDGET_DATA = "REQUEST_BUDGET_DATA"
-const ADD_PURCHASES = "ADD_PURCHASES"
-const REMOVE_PURCHASES = "REMOVE_PURCHASES"
+const ADD_PURCHASE = "ADD_PURCHASE"
+const REMOVE_PURCHASE = "REMOVE_PURCHASE"
 
 export function requestBudgetData(){
     let data = axios.get('/api/budget-data').then(res => res.data)
@@ -20,12 +20,12 @@ export function requestBudgetData(){
 }
 export function addPurchase  (price, description, category) {
     let data = axios.post('/api/budget-data/purchase', {
-        description,
         price,
+        description,
         category
     }).then(res=> res.data)
     return {
-        type: ADD_PURCHASES,
+        type: ADD_PURCHASE,
         payload: data
 
     }
@@ -34,13 +34,13 @@ export function addPurchase  (price, description, category) {
 export function removePurchase(id){
     let data = axios.delete(`/api/budget-data/purchase/${id}`).then(res => res.data)
     return {
-        type: REMOVE_PURCHASES,
+        type: REMOVE_PURCHASE,
         payload: data
     }
 }
 
 
-export default function reducer(state = initialState, action){
+export default function budgetReducer(state = initialState, action){
     switch(action.type){
         case `${REQUEST_BUDGET_DATA}_PENDING`:
             return {
@@ -53,30 +53,27 @@ export default function reducer(state = initialState, action){
                     ...action.payload,
                     loading: false
                 }
-                case `${ADD_PURCHASES}_PENDING`:
+                case `${ADD_PURCHASE}_PENDING`:
                     return {
                         ...state,
                         loading: true
                     }
-                    case `${ADD_PURCHASES}_FULFILLED`:
+                    case `${ADD_PURCHASE}_FULFILLED`:
                         return {
                             ...state,
                             ...action.payload,
                             loading: false
                         }
-                        case `${REMOVE_PURCHASES}_PENDING`:
+                        case `${REMOVE_PURCHASE}_PENDING`:
                         return {
                             ...state,
                             loading: true
                         }
-                        case `${REMOVE_PURCHASES}_FULFILLED`:
+                        case `${REMOVE_PURCHASE}_FULFILLED`:
                             return {
                                 ...state,
                                 loading: false
                             }
-
-
-
+                            default: return state;
     }
-    return state;
 }
